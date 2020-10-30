@@ -39,8 +39,4 @@
     <string name="msg_login_failed">Login Failed!</string>
     <string name="msg_username_empty">Username can not be empty</string>
     <string name="password_requirement">Password must Contain 1 Uppercase, 1 Lowercase, 1 Number, 1 Spacial character.</string>
-    <string name="user_list">User list</string>
-    <string name="toolbar">Toolbar</string>
-    <string name="cancel">Cancel</string>
-    <string name="logout">Logout</string>
 </resources>

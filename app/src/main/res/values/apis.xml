@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="base_url">https://apis.biz-insights.com/api-biz-insights/api/</string>
+    <string name="register">register</string>
+    <string name="login">validateLogin</string>
+</resources>
