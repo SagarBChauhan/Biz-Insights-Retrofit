@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,12 +107,12 @@ public class RegisterActivity extends AppCompatActivity {
         APIService apiService = RetrofitClient.getClient(getString(R.string.base_url)).create(APIService.class);
         JSONObject postData = new JSONObject();
         try {
-            postData.put(KeyConstants.First_name, et_first_name.getText().toString().trim());
-            postData.put(KeyConstants.Last_name, et_last_name.getText().toString().trim());
-            postData.put(KeyConstants.Address, et_address.getText().toString().trim());
-            postData.put(KeyConstants.Email_id, et_email.getText().toString().trim());
-            postData.put(KeyConstants.Mobile_no, et_mobile.getText().toString().trim());
-            postData.put(KeyConstants.Password, et_password.getText().toString().trim());
+            postData.put(KeyConstants.First_name, Objects.requireNonNull(et_first_name.getText()).toString().trim());
+            postData.put(KeyConstants.Last_name, Objects.requireNonNull(et_last_name.getText()).toString().trim());
+            postData.put(KeyConstants.Address, Objects.requireNonNull(et_address.getText()).toString().trim());
+            postData.put(KeyConstants.Email_id, Objects.requireNonNull(et_email.getText()).toString().trim());
+            postData.put(KeyConstants.Mobile_no, Objects.requireNonNull(et_mobile.getText()).toString().trim());
+            postData.put(KeyConstants.Password, Objects.requireNonNull(et_password.getText()).toString().trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -147,7 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 progressFlower.dismiss();
                 Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Logger.e(t.getMessage());
+                Logger.e(Objects.requireNonNull(t.getMessage()));
             }
         });
     }
