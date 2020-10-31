@@ -1,8 +1,5 @@
 package com.biz_insights_retrofit.apis;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -28,13 +25,11 @@ public class RetrofitClient {
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient(String baseUrl) {
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         return retrofit;
     }

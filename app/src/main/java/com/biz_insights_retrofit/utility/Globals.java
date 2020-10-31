@@ -1,5 +1,6 @@
 package com.biz_insights_retrofit.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -14,9 +15,34 @@ import com.orhanobut.logger.Logger;
 import java.lang.reflect.Type;
 
 public class Globals extends MultiDexApplication {
-    Context context;
-    SharedPreferences sharedPreferences;
+    @SuppressLint("StaticFieldLeak")
+    static Context context;
+    SharedPreferences sp;
     SharedPreferences.Editor editor;
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static String userDatatoJson(LoginDataModel userDetails) {
+        if (userDetails == null) {
+            return null;
+        }
+        Type mapType = new TypeToken<LoginDataModel>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.toJson(userDetails, mapType);
+    }
+
+    public static LoginDataModel toUserData(String params) {
+        if (params == null)
+            return null;
+
+        Type mapType = new TypeToken<LoginDataModel>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(params, mapType);
+    }
 
     @Override
     public void onCreate() {
@@ -25,39 +51,23 @@ public class Globals extends MultiDexApplication {
         Logger.addLogAdapter(new AndroidLogAdapter());
     }
 
-    //GET Login data
+    public SharedPreferences getSharedPref() {
+        return sp = (sp == null) ? getSharedPreferences(Constants.secrets, Context.MODE_PRIVATE) : sp;
+    }
+
+    public SharedPreferences.Editor getEditor() {
+        return editor = (editor == null) ? getSharedPref().edit() : editor;
+    }
+
+    //New Method
     public LoginDataModel getLoginData() {
         return toUserData(getSharedPref().getString(Constants.USER_MAP, null));
     }
 
-    //SET Login data
+    //New Method
     public void setLoginData(LoginDataModel userData) {
-        getEditor().putString(Constants.USER_MAP, userDataToJson(userData));
-    }
-
-    private SharedPreferences getSharedPref() {
-        return sharedPreferences = (sharedPreferences == null) ? getSharedPreferences(Constants.secrets, Context.MODE_PRIVATE) : sharedPreferences;
-    }
-
-    private LoginDataModel toUserData(String params) {
-        if (params == null) {
-            return null;
-        }
-        Type mapType = new TypeToken<LoginDataModel>() {
-        }.getType();
-        return new Gson().fromJson(params, mapType);
-    }
-
-    private SharedPreferences.Editor getEditor() {
-        return editor = (editor == null) ? getSharedPref().edit() : editor;
-    }
-
-    private String userDataToJson(LoginDataModel userData) {
-        if (userData == null) {
-            return null;
-        }
-        Type mapType = new TypeToken<LoginDataModel>() {
-        }.getType();
-        return new Gson().toJson(userData, mapType);
+        getEditor().putString(Constants.USER_MAP, userDatatoJson(userData));
+        getEditor().commit();
     }
 }
+

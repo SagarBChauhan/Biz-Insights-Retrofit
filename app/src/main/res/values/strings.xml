@@ -39,4 +39,11 @@
     <string name="msg_login_failed">Login Failed!</string>
     <string name="msg_username_empty">Username can not be empty</string>
     <string name="password_requirement">Password must Contain 1 Uppercase, 1 Lowercase, 1 Number, 1 Spacial character.</string>
+    <string name="text_dashbord">Dashbord</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
+    <string name="get_users_list">getUsersist</string>
+    <string name="msg_no_internet_title">Internet connection required</string>
+    <string name="msg_no_internet">You need an active internet connection to access this feature of the app</string>
+    <string name="go_to_settings">Settings</string>
 </resources>

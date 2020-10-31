@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BizInsightsretrofit"
         tools:targetApi="n">
+        <activity android:name=".DashboardActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

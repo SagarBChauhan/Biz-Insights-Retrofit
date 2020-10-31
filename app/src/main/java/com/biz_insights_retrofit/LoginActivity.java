@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
         APIService apiService = RetrofitClient.getClient(getString(R.string.base_url)).create(APIService.class);
         JSONObject postData = new JSONObject();
         try {
-            postData.put(KeyConstants.Username, et_username.getText().toString().trim());
-            postData.put(KeyConstants.Password, et_password.getText().toString().trim());
+            postData.put(KeyConstants.Username, Objects.requireNonNull(et_username.getText()).toString().trim());
+            postData.put(KeyConstants.Password, Objects.requireNonNull(et_password.getText()).toString().trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -116,8 +117,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (loginDataModel.data != null) {
                             globals.setLoginData(loginDataModel);
                             Toast.makeText(LoginActivity.this, loginDataModel.msg, Toast.LENGTH_SHORT).show();
-//                            start Next Activity
-//                            finish();
+                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                            finish();
                         }
                     }
                 } catch (IOException | JSONException e) {
@@ -130,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressFlower.dismiss();
                 toggleProgressVisibility(progressBar, btn_login);
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Logger.e(t.getMessage());
+                Logger.e(Objects.requireNonNull(t.getMessage()));
             }
         });
     }
