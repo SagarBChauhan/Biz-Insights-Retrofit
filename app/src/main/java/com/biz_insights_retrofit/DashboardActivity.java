@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.biz_insights_retrofit.adapters.UserListAdapter;
 import com.biz_insights_retrofit.apis.APIService;
+import com.biz_insights_retrofit.apis.ConnectionDetector;
 import com.biz_insights_retrofit.apis.ProgressUtil;
 import com.biz_insights_retrofit.apis.RetrofitClient;
 import com.biz_insights_retrofit.models.UserDataModel;
@@ -92,8 +93,17 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!ConnectionDetector.internetCheck(DashboardActivity.this, true))
+            return;
+    }
 
     private void getDataResponse() {
+        if (!ConnectionDetector.internetCheck(DashboardActivity.this, true))
+            return;
+
         APIService apiService = RetrofitClient.getClient(getString(R.string.base_url)).create(APIService.class);
         JSONObject params = new JSONObject();
         try {

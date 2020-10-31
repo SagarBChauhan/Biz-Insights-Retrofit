@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import com.biz_insights_retrofit.apis.APIService;
+import com.biz_insights_retrofit.apis.ConnectionDetector;
 import com.biz_insights_retrofit.apis.KeyConstants;
 import com.biz_insights_retrofit.apis.ProgressUtil;
 import com.biz_insights_retrofit.apis.RetrofitClient;
@@ -99,6 +100,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void doRequestForRegister() {
+        if (!ConnectionDetector.internetCheck(RegisterActivity.this, true))
+            return;
+
         APIService apiService = RetrofitClient.getClient(getString(R.string.base_url)).create(APIService.class);
         JSONObject postData = new JSONObject();
         try {

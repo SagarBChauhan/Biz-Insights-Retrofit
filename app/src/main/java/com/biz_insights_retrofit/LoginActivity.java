@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 
 import com.biz_insights_retrofit.apis.APIService;
+import com.biz_insights_retrofit.apis.ConnectionDetector;
 import com.biz_insights_retrofit.apis.KeyConstants;
 import com.biz_insights_retrofit.apis.ProgressUtil;
 import com.biz_insights_retrofit.apis.RetrofitClient;
@@ -90,6 +91,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doRequestForLogin() {
+        if (!ConnectionDetector.internetCheck(LoginActivity.this, true))
+            return;
+
         APIService apiService = RetrofitClient.getClient(getString(R.string.base_url)).create(APIService.class);
         JSONObject postData = new JSONObject();
         try {
