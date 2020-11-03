@@ -69,5 +69,14 @@ public class Globals extends MultiDexApplication {
         getEditor().putString(Constants.USER_MAP, userDatatoJson(userData));
         getEditor().commit();
     }
+
+    public int getGridValue() {
+        return getSharedPref().getInt(Constants.GridValue, 0);
+    }
+
+    public void setGridValue(int gridValue) {
+        getEditor().putInt(Constants.GridValue, gridValue);
+        getEditor().commit();
+    }
 }
 

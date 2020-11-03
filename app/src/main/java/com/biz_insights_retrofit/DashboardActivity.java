@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.biz_insights_retrofit.adapters.UserListAdapter;
@@ -51,13 +51,19 @@ public class DashboardActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.tv_title)
     AppCompatTextView tv_title;
+    @BindView(R.id.tv_no_data)
+    AppCompatTextView tv_no_data;
     @BindView(R.id.iv_logout)
     AppCompatImageView iv_logout;
     @BindView(R.id.iv_back)
     AppCompatImageView iv_back;
+    @BindView(R.id.iv_layout)
+    AppCompatImageView iv_layout;
     UserListAdapter userListAdapter;
     Gson gson;
     Globals globals;
+    UserDataModel dataModel;
+    GridLayoutManager gridLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,27 +75,60 @@ public class DashboardActivity extends AppCompatActivity {
     private void init() {
         ButterKnife.bind(this);
         setupToolbar();
-        gson = new GsonBuilder().create();
         globals = (Globals) getApplicationContext();
+        gson = new GsonBuilder().create();
+        setupLayout();
         getDataResponse();
     }
 
-    @OnClick({R.id.iv_logout})
+    private void setupLayout() {
+        gridLayoutManager = new GridLayoutManager(DashboardActivity.this, 2);
+        SyncLayout();
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void SyncLayout() {
+        if (globals.getGridValue() == 0) {
+            iv_layout.setImageDrawable(getResources().getDrawable(R.drawable.list_view_icon));
+            gridLayoutManager.setSpanCount(2);
+        } else if (globals.getGridValue() == 1) {
+            iv_layout.setImageDrawable(getResources().getDrawable(R.drawable.grid_view_icon));
+            gridLayoutManager.setSpanCount(1);
+        } else {
+            gridLayoutManager.setSpanCount(1);
+        }
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(userListAdapter);
+    }
+
+    @OnClick({R.id.iv_logout, R.id.iv_layout})
     public void onClickAction(View view) {
-        if (view.getId() == R.id.iv_logout) {
-            new AlertDialog.Builder(DashboardActivity.this)
-                    .setTitle("Logout")
-                    .setMessage("Are you sure want logout?")
-                    .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(getString(R.string.logout), (dialog, which) -> {
-                        Globals globals = (Globals) getApplicationContext();
-                        globals.setLoginData(null);
-                        if (globals.getLoginData() == null) {
-                            startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-                            finish();
-                        }
-                    })
-                    .show();
+        switch (view.getId()) {
+            case R.id.iv_logout:
+                new AlertDialog.Builder(DashboardActivity.this)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure want logout?")
+                        .setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                        .setPositiveButton(getString(R.string.logout), (dialog, which) -> {
+                            Globals globals = (Globals) getApplicationContext();
+                            globals.setLoginData(null);
+                            if (globals.getLoginData() == null) {
+                                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                                finish();
+                            }
+                        })
+                        .show();
+                break;
+            case R.id.iv_layout:
+                if (globals.getGridValue() == 0) {
+                    globals.setGridValue(1);
+                } else if (globals.getGridValue() == 1) {
+                    globals.setGridValue(0);
+                }
+                if (dataModel != null && dataModel.data.rows.size() > 0) {
+                    SyncLayout();
+                }
+                break;
         }
     }
 
@@ -124,9 +163,9 @@ public class DashboardActivity extends AppCompatActivity {
                         String data = response.body().string();
                         Logger.json(data);
                         JSONObject object = new JSONObject(data);
-                        UserDataModel dataModel = gson.fromJson(String.valueOf(object), UserDataModel.class);
-                        userListAdapter = new UserListAdapter(dataModel.data.rows);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
+                        dataModel = gson.fromJson(String.valueOf(object), UserDataModel.class);
+                        userListAdapter = new UserListAdapter(DashboardActivity.this, dataModel.data.rows);
+                        recyclerView.setLayoutManager(gridLayoutManager);
                         recyclerView.setAdapter(userListAdapter);
                     }
                 } catch (IOException | JSONException e) {
@@ -137,6 +176,7 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call<ResponseBody> call, @NotNull Throwable t) {
                 progressFlower.dismiss();
+                tv_no_data.setVisibility(View.VISIBLE);
                 Logger.e(Objects.requireNonNull(t.getMessage()));
             }
         });

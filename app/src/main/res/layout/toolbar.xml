@@ -12,7 +12,7 @@
     app:contentInsetStartWithNavigation="0dp"
     app:layout_collapseMode="pin">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/_10sdp"
@@ -49,5 +49,5 @@
             android:layout_gravity="center"
             android:src="@drawable/icon_logout"
             android:visibility="gone" />
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.Toolbar>

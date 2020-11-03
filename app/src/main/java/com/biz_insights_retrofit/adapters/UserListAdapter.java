@@ -1,6 +1,7 @@
 package com.biz_insights_retrofit.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +12,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.biz_insights_retrofit.R;
 import com.biz_insights_retrofit.models.UserDataModel;
+import com.biz_insights_retrofit.utility.Globals;
 
 import java.util.ArrayList;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
     ArrayList<UserDataModel.Rows> userListData;
+    Globals globals;
+    Context context;
 
-    public UserListAdapter(ArrayList<UserDataModel.Rows> userListData) {
+    public UserListAdapter(Context context, ArrayList<UserDataModel.Rows> userListData) {
+        this.context = context;
+        globals = (Globals) context.getApplicationContext();
         this.userListData = userListData;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_user_list, parent, false);
+        View view;
+        if (globals.getGridValue() == 0) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_grid, parent, false);
+        } else if (globals.getGridValue() == 1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_list, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_list, parent, false);
+        }
         return new ViewHolder(view);
     }
 
